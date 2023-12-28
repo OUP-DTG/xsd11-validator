@@ -1,46 +1,44 @@
 package hu.unideb.inf.validator;
 
 import java.io.PrintWriter;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import org.xml.sax.ErrorHandler;
+public class SimpleErrorHandler extends XSDErrorHandler {
+   private PrintWriter out;
 
-public class SimpleErrorHandler implements ErrorHandler {
+   public SimpleErrorHandler(boolean failOnError, PrintWriter out) {
+      super(failOnError);
+      this.out = out;
+   }
 
-    private PrintWriter out;
-    private boolean failOnError = false;
+   public SimpleErrorHandler(boolean failOnError) {
+      this(failOnError, new PrintWriter(System.err, true));
+   }
 
-    public SimpleErrorHandler() {
-        out = new PrintWriter(System.err, true);
-    }
+   public SimpleErrorHandler() {
+      this(false);
+   }
 
-    public SimpleErrorHandler(boolean failOnError) {
-        this();
-        this.failOnError = failOnError;
-    }
+   public void warning(SAXParseException e) throws SAXException {
+      this.printException("Warning", e);
+   }
 
-    public SimpleErrorHandler(PrintWriter out) {
-        this.out = out;
-    }
+   public void error(SAXParseException e) throws SAXException {
+      this.printException("Error", e);
+      this.hasErrors = true;
+      if (this.failOnError) {
+         throw e;
+      }
+   }
 
-    public void warning(SAXParseException e) throws SAXException {
-        printException("Warning", e);
-    }
+   public void fatalError(SAXParseException e) throws SAXException {
+      this.printException("Fatal error", e);
+      this.hasErrors = true;
+      throw e;
+   }
 
-    public void error(SAXParseException e) throws SAXException {
-        printException("Error", e);
-        if (failOnError) throw e;
-    }
-
-    public void fatalError(SAXParseException e) throws SAXException {
-        printException("Fatal error", e);
-        throw e;
-    }
-
-    private void printException(String prefix, SAXParseException e) {
-        out.format("[%s] %s:%d:%d: %s%n", prefix, e.getSystemId(), e.getLineNumber(), e.getColumnNumber(), e.getMessage());
-    }
-
+   private void printException(String prefix, SAXParseException e) {
+      this.out.format("[%s] %s:%d:%d: %s%n", prefix, e.getSystemId(), e.getLineNumber(), e.getColumnNumber(), e.getMessage());
+   }
 }
