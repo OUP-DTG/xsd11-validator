@@ -38,7 +38,7 @@ public class XMLErrorHandler extends XSDErrorHandler {
 
    private void printException(String prefix, SAXParseException e) {
       this.out.println("\t<result name=\"" + prefix + "\">");
-      this.out.format("\t\t%d:%d,%s%n", e.getLineNumber(), e.getColumnNumber(), e.getMessage());
+      this.out.format("\t\t%d:%d|%s%n", e.getLineNumber(), e.getColumnNumber(), e.getMessage());
       this.out.println("\t</result>");
    }
 
