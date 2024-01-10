@@ -51,6 +51,11 @@
             <classifier>xml-schema-1.1</classifier>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+          <groupId>info.picocli</groupId>
+          <artifactId>picocli</artifactId>
+          <version>4.6.3</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
